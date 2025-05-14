@@ -1,0 +1,12 @@
+[workspace]
+members = [ "dwbl-lib" ]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+version = "0.1.0"
+
+[workspace.dependencies]
+cxx = "1.0"
+cxx-build = "1.0"

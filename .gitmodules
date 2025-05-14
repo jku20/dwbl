@@ -1,0 +1,6 @@
+[submodule "yosys"]
+	path = yosys
+	url = git@github.com:YosysHQ/yosys.git
+[submodule "dwbl-lib/yosys"]
+	path = dwbl-lib/yosys
+	url = git@github.com:YosysHQ/yosys.git
