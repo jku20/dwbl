@@ -8,7 +8,11 @@ fn main() {
         // Add yosys itself as a place to look for headers. This is because cxx builds outside of
         // the yosys directory so the nested include directives in yosys's c++ files break.
         .include("yosys")
+        .include("src")
+        .file("src/lib.cc")
         .compile("dwbl-lib");
 
     println!("cargo:rerun-if-changed=src/lib.rs");
+    println!("cargo:rerun-if-changed=src/lib.cc");
+    println!("cargo:rerun-if-changed=src/lib.h");
 }

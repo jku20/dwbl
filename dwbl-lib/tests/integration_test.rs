@@ -15,25 +15,7 @@ struct Test1Pass : public Pass {{
 	Test1Pass() : Pass(\"test1\", \"creating the absval module\") {{}}
 	void execute(std::vector<std::string>, RTLIL::Design *design) override
 	{{
-		if (design->has(\"\\\\absval\") != 0)
-			log_error(\"%s\", log_from_rust(\"A module with the name absval already exists!\\n\"));
-
-		RTLIL::Module *module = design->addModule(\"\\\\absval\");
-		log(\"%s\", log_from_rust(\"A module with the name absval already exists!\\n\"));
-
-		RTLIL::Wire *a = module->addWire(\"\\\\a\", 4);
-		a->port_input = true;
-		a->port_id = 1;
-
-		RTLIL::Wire *y = module->addWire(\"\\\\y\", 4);
-		y->port_output = true;
-		y->port_id = 2;
-
-		RTLIL::Wire *a_inv = module->addWire(NEW_ID, 4);
-		module->addNeg(NEW_ID, a, a_inv, true);
-		module->addMux(NEW_ID, a, a_inv, RTLIL::SigSpec(a, 3), y);
-
-		module->fixup_ports();
+        build_module(*design);
 	}}
 }} Test1Pass;
 "
@@ -54,12 +36,17 @@ fn test_can_access_any_function() {
     let target_profile_dir = PathBuf::from(format!("{out_dir}/../../.."))
         .canonicalize()
         .unwrap();
+    let src_root = PathBuf::from(format!("{out_dir}/../../../../../dwbl-lib/src"))
+        .canonicalize()
+        .unwrap();
     let target_profile_dir = target_profile_dir.as_os_str().to_str().unwrap();
+    let src_root = src_root.as_os_str().to_str().unwrap();
 
     let configed = Command::new("yosys-config")
         .arg("--exec")
         .arg("--cxx")
         .arg("--cxxflags")
+        .arg(format!("-I{src_root}"))
         .arg("--ldflags")
         .arg("-o")
         .arg(&so)
